@@ -7,7 +7,7 @@ export const register = async (req, res) => {
   try {
     const {userId, name, email, mobile, password, role } = req.body;
 
-    const existingUser = await User.findOne({ user_id:userId });
+    const existingUser = await User.findOne({user_id:userId });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -24,6 +24,7 @@ export const register = async (req, res) => {
     });
 
     res.status(201).json({
+      success: true,
       message: "User created successfully",
       user,
     });
@@ -37,7 +38,7 @@ export const login = async (req, res) => {
   try {
     const {userId, password } = req.body;
 
-    const user = await User.findOne({ user_id:userId });
+    const user = await User.findOne({user_id:userId });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -54,6 +55,7 @@ export const login = async (req, res) => {
     );
 
     res.status(201).json({
+      success: true,
       message: "Login successful",
       token,
       user,
