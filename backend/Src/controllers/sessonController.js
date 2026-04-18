@@ -4,7 +4,6 @@ const SessionCreate = async (req, res) => {
   try {
     const { name, startDate, endDate, isActive } = req.body;
 
-    //  1. Basic validation
     if (!name || !startDate || !endDate) {
       return res.status(400).json({
         message: "Name, startDate and endDate are required",
@@ -18,7 +17,7 @@ const SessionCreate = async (req, res) => {
       });
     }
 
-    // 3. If isActive = true → make all others inactive
+    // 3 If isActive = true → make all others inactive
     if (isActive) {
       await AcademicYear.updateMany(
         { isActive: true },

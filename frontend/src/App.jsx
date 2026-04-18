@@ -1,13 +1,21 @@
 import React from 'react'
 import { ToastContainer } from "react-toastify";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Login from './pages/Login';
+import MainLayouts from './components/Layouts/MainLayouts';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
     <div>
-      <Login />
-     <ToastContainer position="top-right" autoClose={2000} />
+    
+     <Routes>
+        <Route element={<MainLayouts />}>
+          <Route path="/" element={<Dashboard />} />
+          {/* <Route path="/users" element={<Users />} /> */}
+        </Route>
+      </Routes>
     </div>
   )
 }
