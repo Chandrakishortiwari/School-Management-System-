@@ -2,20 +2,17 @@ import mongoose from "mongoose";
 
 const TeacherSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    name: {
+    user_id: {
       type: String,
       required: true,
+      ref: "User"
     },
     dob: Date,
     gender: String,
+    emali:String,
     address: String,
-    alternate_num: Number,
-    aadhar: String,
+    alternate_num: String,
+    aadhar: { type: String, unique: true, minlength: 12, maxlength: 12 },
     subject: String,
     qualification: String,
     joiningDate: Date,

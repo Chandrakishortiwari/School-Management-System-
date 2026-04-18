@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken";
 // REGISTER
 export const register = async (req, res) => {
   try {
-    const {userId, name, email, mobile, password, role } = req.body;
+    const { userId, name, mobile, password, role } = req.body;
 
-    const existingUser = await User.findOne({user_id:userId });
+    const existingUser = await User.findOne({ user_id: userId });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -15,9 +15,8 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      user_id:userId,
+      user_id: userId,
       name,
-      email,
       mobile,
       password: hashedPassword,
       role,
@@ -36,9 +35,9 @@ export const register = async (req, res) => {
 // LOGIN
 export const login = async (req, res) => {
   try {
-    const {userId, password } = req.body;
+    const { userId, password } = req.body;
 
-    const user = await User.findOne({user_id:userId });
+    const user = await User.findOne({ user_id: userId });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -48,17 +47,45 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      "SECRET_KEY",
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ id: user._id, role: user.role }, "SECRET_KEY", {
+      expiresIn: "7d",
+    });
 
     res.status(201).json({
       success: true,
       message: "Login successful",
       token,
       user,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// updated
+export const updatedUser = async (req, res) => {
+  try {
+    const { userId, name, email, mobile, password, role } = req.body;
+    const id = req.params.id;
+    if (!id) {
+      return res.status(404).json({ message: "UserId Emapty" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const updatedUser = await User.findOneAndUpdate(
+      { user_id: id },
+      { user_id: userId, name, email, mobile, password: hashedPassword, role },
+      { new: true },
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User Not Updated" });
+    }
+
+    return res.status(201).json({
+      success: true,
+      msg: "User Upadted SuccessFully!",
+      data: updatedUser,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

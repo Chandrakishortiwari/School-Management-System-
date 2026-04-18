@@ -17,19 +17,25 @@ export const createStudentProfile = async (req, res) => {
       photo,
     } = req.body;
 
-    // check user exists
-    const user = await User.findById(userId);
+     // user_id se check
+    const user = await User.findOne({ user_id: userId });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // optional: role check
     if (user.role !== "student") {
       return res.status(400).json({ message: "User is not a student" });
     }
 
+    // check duplicate profile
+    const existing = await Student.findOne({ user_id: userId });
+    if (existing) {
+      return res.status(400).json({ message: "Profile already exists" });
+    }
+
     const student = await Student.create({
-      userId,
+     user_id: userId,
       dob,
       gender,
       fatherName,
@@ -38,7 +44,6 @@ export const createStudentProfile = async (req, res) => {
       district,
       pin,
       aadhar,
-      photo,
     });
 
     res.status(201).json({
@@ -53,8 +58,28 @@ export const createStudentProfile = async (req, res) => {
 // GET ALL STUDENTS
 export const getAllStudents = async (req, res) => {
   try {
-    const students = await Student.find().populate("userId");
-    res.json(students);
+    const students = await Student.find();
+
+    const result = await Promise.all(
+      students.map(async (student) => {
+        const user = await User.findOne(
+          { user_id: student.user_id },
+          "name mobile role user_id" 
+        );
+
+        return {
+          student,
+          user 
+        };
+      })
+    );
+
+   return res.status(201).json({
+      success: true,
+      msg: "Get All Student SuccessFully!",
+      data: result,
+    });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -63,13 +88,45 @@ export const getAllStudents = async (req, res) => {
 // GET SINGLE STUDENT
 export const getStudentById = async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id).populate("userId");
+    console.log(req.params.id);
+
+    const userId = req.params.id;
+     const student = await Student.findOne({user_id:userId});
+
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    res.json(student);
+    // User find
+    const user = await User.findOne(
+      { user_id: userId },
+      "name mobile role user_id"
+    );
+
+    //  Combine result
+    const result = {
+      student,
+      user
+    };
+
+   return res.status(201).json({
+      success: true,
+      msg: "Get All Student SuccessFully!",
+      data: result,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
+// studentUpadetById
+
+// export const studentUpadetById = async (req, res)=>{
+//   try{
+//       const student = await Student.findOne({userId:req.params.id}).populate("userId");
+     
+
+//   }catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// }

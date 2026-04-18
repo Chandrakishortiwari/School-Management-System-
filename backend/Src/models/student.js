@@ -2,23 +2,23 @@ import mongoose from "mongoose";
 
 const studentSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    user_id: {
+      type: String,
       required: true,
+      ref: "User"
     },
     dob: Date,
     gender: String,
     fatherName: String,
     motherName: String,
-    address: String,
+    aadhar: { type: String, unique: true, minlength: 12, maxlength: 12 },
+    pin: { type: String, minlength: 6, maxlength: 6 },
     district: String,
-    pin: String,
-    alternate_num:Number,
+    alternate_num: String,
     aadhar: String,
     photo: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Student", studentSchema);
