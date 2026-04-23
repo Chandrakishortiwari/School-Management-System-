@@ -6,6 +6,10 @@ const ClassSchema = new mongoose.Schema(
       type:String, 
       required: true,
     },
+    fee: {
+      type:String, 
+      required: true,
+    },
     classTeacherId: {
       type: String,
       ref: "Teacher",

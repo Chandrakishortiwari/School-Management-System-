@@ -1,6 +1,7 @@
+import AcademicYear from "../models/academicYear.js";
 
 
-const SessionCreate = async (req, res) => {
+export const SessionCreate = async (req, res) => {
   try {
     const { name, startDate, endDate, isActive } = req.body;
 
@@ -9,13 +10,13 @@ const SessionCreate = async (req, res) => {
         message: "Name, startDate and endDate are required",
       });
     }
-
     // 2. Date validation
     if (new Date(startDate) >= new Date(endDate)) {
       return res.status(400).json({
         message: "startDate must be less than endDate",
       });
     }
+
 
     // 3 If isActive = true → make all others inactive
     if (isActive) {
@@ -24,7 +25,7 @@ const SessionCreate = async (req, res) => {
         { $set: { isActive: false } }
       );
     }
-
+// console.log("kfk");
     // 4. Create session
     const session = await AcademicYear.create({
       name,
@@ -42,3 +43,6 @@ const SessionCreate = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+

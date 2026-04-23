@@ -1,4 +1,6 @@
+import AcademicYear from "../models/academicYear.js";
 import Student from "../models/student.js";
+import StudentClass from "../models/studentClass.js";
 import User from "../models/user.js";
 
 // CREATE STUDENT PROFILE
@@ -6,6 +8,7 @@ export const createStudentProfile = async (req, res) => {
   try {
     const {
       userId,
+      classId,
       dob,
       gender,
       fatherName,
@@ -29,11 +32,12 @@ export const createStudentProfile = async (req, res) => {
     }
 
     // check duplicate profile
-    const existing = await Student.findOne({ user_id: userId });
-    if (existing) {
-      return res.status(400).json({ message: "Profile already exists" });
+    const existingStudent = await Student.findOne({ user_id: userId });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Student already exists" });
     }
 
+     // 3. Create student profile
     const student = await Student.create({
      user_id: userId,
       dob,
@@ -46,9 +50,36 @@ export const createStudentProfile = async (req, res) => {
       aadhar,
     });
 
+      // 4. Get active session automatically
+    const session = await AcademicYear.findOne({ isActive: true });
+    if (!session) {
+      return res.status(400).json({ message: "No active session found" });
+    }
+
+   // 5. Generate Roll Number (class + session based)
+    const count = await StudentClass.countDocuments({
+      classId,
+      sessionId: session._id,
+    });
+
+        const rollNumber = count + 1;
+
+   // 6. Create Student_Class entry
+    const studentClass = await StudentClass.create({
+      studentId: student._id,
+      classId,
+      sessionId: session._id,
+      rollNumber,
+      status: "active",
+    });
+
     res.status(201).json({
+      success: true,
       message: "Student profile created",
-      student,
+      data: {
+        student,
+        studentClass,
+      },
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -130,3 +161,14 @@ export const getStudentById = async (req, res) => {
 //     res.status(500).json({ message: err.message });
 //   }
 // }
+
+
+
+
+
+
+
+
+
+
+
