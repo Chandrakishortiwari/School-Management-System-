@@ -6,8 +6,10 @@ import Conect from './Src/db/conectdb.js';
 import AuthRoute from './Src/routes/AuthRoute.js';
 import StudentRoute from './Src/routes/studentRoute.js';
 import TeacherRoute from './Src/routes/TeacherRoute.js';
-import ClassRoute from './Src/routes/ClassRoute.js'
-import AcademicYear from './Src/routes/AcademicYearRoute.js'
+import ClassRoute from './Src/routes/ClassRoute.js';
+import AcademicYear from './Src/routes/AcademicYearRoute.js';
+import LeavesRoute from './Src/routes/LeavesRoute.js';
+import AttendanceRoute from './Src/routes/AttendanceRoute.js'
 dotenv.config();
 Conect();
 const app = express()
@@ -31,6 +33,8 @@ app.use("/api/student",StudentRoute);
 app.use("/api/teacher", TeacherRoute);
 app.use("/api/class", ClassRoute);
 app.use("/api/academicyear", AcademicYear);
+app.use("/api/leaves",LeavesRoute);
+app.use("/api/attendance",AttendanceRoute);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

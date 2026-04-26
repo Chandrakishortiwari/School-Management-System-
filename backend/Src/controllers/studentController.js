@@ -2,6 +2,7 @@ import AcademicYear from "../models/academicYear.js";
 import Student from "../models/student.js";
 import StudentClass from "../models/studentClass.js";
 import User from "../models/user.js";
+import Class from "../models/classes.js";
 
 // CREATE STUDENT PROFILE
 export const createStudentProfile = async (req, res) => {
@@ -56,7 +57,26 @@ export const createStudentProfile = async (req, res) => {
       return res.status(400).json({ message: "No active session found" });
     }
 
-   // 5. Generate Roll Number (class + session based)
+
+     // 5. class check
+    const classExists = await Class.findById(classId);
+
+    if (!classExists) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // 6. duplicate class entry check
+    const existingClass = await StudentClass.findOne({
+      student_id: userId,
+      sessionId: session._id,
+    });
+
+    if (existingClass) {
+      return res.status(400).json({ message: "Already assigned to class" });
+    }
+
+
+   // 7. Generate Roll Number (class + session based)
     const count = await StudentClass.countDocuments({
       classId,
       sessionId: session._id,
@@ -64,7 +84,7 @@ export const createStudentProfile = async (req, res) => {
 
         const rollNumber = count + 1;
 
-   // 6. Create Student_Class entry
+   // 8. Create Student_Class entry
     const studentClass = await StudentClass.create({
       studentId: student._id,
       classId,

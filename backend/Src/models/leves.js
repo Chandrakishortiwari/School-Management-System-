@@ -3,17 +3,10 @@ import mongoose from "mongoose";
 const LeaveSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      refPath: "userModel",
+     type: String,
+     required: true,
+     ref: "User",
     },
-
-    userModel: {
-      type: String,
-      required: true,
-      enum: ["Student", "Teacher"],
-    },
-
     fromDate: {
       type: Date,
       required: true,
@@ -37,7 +30,7 @@ const LeaveSchema = new mongoose.Schema(
     },
 
     approvedBy: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "User",
       default: null,
     },
@@ -46,3 +39,5 @@ const LeaveSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+export default mongoose.model("Leaves", LeaveSchema);
