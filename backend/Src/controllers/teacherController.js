@@ -71,7 +71,7 @@ export const getAllTeacher = async (req, res) => {
       teachers.map(async (teacher) => {
         const user = await User.findOne(
           { user_id: teacher.user_id },
-          "name mobile role user_id",
+          "name mobile role user_id isActive",
         );
 
         return {
@@ -80,6 +80,7 @@ export const getAllTeacher = async (req, res) => {
         };
       }),
     );
+console.log(result);
 
     return res.status(201).json({
       success: true,

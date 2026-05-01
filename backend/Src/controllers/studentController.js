@@ -115,12 +115,20 @@ export const getAllStudents = async (req, res) => {
       students.map(async (student) => {
         const user = await User.findOne(
           { user_id: student.user_id },
-          "name mobile role user_id" 
+          "name mobile role user_id isActive" 
         );
+        console.log(student._id);
+        
+        const rollno = await StudentClass.findOne({studentId:student._id});
+        console.log("roll",rollno.rollNumber);
+        
+        const Studentclass = await Class.findById(rollno.classId);
 
         return {
           student,
-          user 
+          user,
+          rollno:rollno.rollNumber,
+          Classs:Studentclass.className
         };
       })
     );

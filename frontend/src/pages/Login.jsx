@@ -2,10 +2,13 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { api } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
+import { api, setAuthToken } from "../lib/api";
+
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
+ const {login} = useAuth();
 
   const validationSchema = Yup.object({
     userId: Yup.string().required("User ID is required"),
@@ -18,11 +21,16 @@ export default function Login() {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     try {
-      const response = await api.auth.login(values);
-      console.log(response);
+       const data = await api.auth.login(values);
+         console.log(data);
+         
+         setAuthToken(data.token);
+         localStorage.setItem('data', JSON.stringify(data.user));
+  
+      // login(values)
 
       toast.success(
-        isLogin ? "Logged in successfully!" : "Registered successfully!",
+        isLogin && "Logged in successfully!",
       );
 
       resetForm();

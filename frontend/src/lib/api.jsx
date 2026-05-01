@@ -43,3 +43,10 @@ export const api = {
   },
    
 };
+export const setAuthToken = (token) => {
+  localStorage.setItem('authToken', token);
+};
+
+export const clearAuthToken = () => {
+  localStorage.removeItem('authToken');
+};

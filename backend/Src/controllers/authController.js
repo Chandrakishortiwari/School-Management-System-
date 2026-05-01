@@ -36,18 +36,25 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { userId, password } = req.body;
-
-    const user = await User.findOne({ user_id: userId });
+console.log("kkk1");
+    const user = await User.findOne({ user_id: userId }).select("+password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+ 
+   console.log("kkk2"); 
+   console.log(user);
+   
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(isMatch);
+    
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+   
 
-    const token = jwt.sign({ id: user._id, role: user.role }, "SECRET_KEY", {
+    
+    const token = jwt.sign({ id: user.user_id, role: user.role }, "SECRET_KEY", {
       expiresIn: "7d",
     });
 
