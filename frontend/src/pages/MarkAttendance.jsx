@@ -40,17 +40,18 @@ const MarkAttendance = () => {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 border border-gray-200 rounded-lg p-5 ">
 
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-slate-800">Mark Attendance</h1>
-          {/* <p className="text-sm text-slate-500 mt-0.5">{user.classAssigned} — {selectedDate}</p> */}
+          <p className="text-sm text-slate-500 mt-0.5">Class:- 9 </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="relative">
+          <div className="relative flex gap-4 text-blue-600">
+            <p className='text-lg'>Date:- </p>
             <select 
-              className="appearance-none pl-3 pr-8 py-2 border border-slate-200 rounded-lg text-sm bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+              className="appearance-none pl-3 pr-8 py-1 border border-slate-200 rounded-lg text-sm bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
             </select>
             <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           </div>
@@ -58,7 +59,7 @@ const MarkAttendance = () => {
         </div>
       </div>
 
-      <div className="px-5 py-3 bg-gray-50 flex justify-between">
+      <div className="px-5 py-3 border rounded-lg border-gray-50 bg-blue-50 flex justify-between">
         <span className="font-medium text-gray-600">
           {students.length} Students
         </span>
@@ -67,7 +68,7 @@ const MarkAttendance = () => {
       {students.map(s => (
         <div
           key={s.id}
-          className="flex items-center justify-between px-5 py-3 border-t"
+          className="flex items-center justify-between px-5"
         >
           {/* LEFT SIDE */}
           <div>
@@ -78,12 +79,12 @@ const MarkAttendance = () => {
           {/* RIGHT SIDE */}
           <div className="flex items-center gap-3">
             {/* Buttons */}
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {/* Present */}
               <button
                 disabled={savedStudents[s.id]}
                 onClick={() => handleSelect(s.id, 'P')}
-                className={`flex items-center gap-1 px-3 py-1 rounded-lg border text-xs
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs
                 ${
                   attendance[s.id] === 'P'
                     ? 'bg-green-100 text-green-600 border-green-300'
@@ -97,7 +98,7 @@ const MarkAttendance = () => {
               <button
                 disabled={savedStudents[s.id]}
                 onClick={() => handleSelect(s.id, 'A')}
-                className={`flex items-center gap-1 px-3 py-1 rounded-lg border text-xs
+                className={`flex items-center gap-3 px-3 py-w rounded-lg border text-xs
                 ${
                   attendance[s.id] === 'A'
                     ? 'bg-red-100 text-red-600 border-red-300'
@@ -114,15 +115,15 @@ const MarkAttendance = () => {
             {changedStudents[s.id] && !savedStudents[s.id] && (
               <button
                 onClick={() => handleSave(s.id)}
-                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg text-xs"
+                className="flex items-center gap-3 px-3 py-2 bg-blue-600 text-white rounded-lg text-xs"
               >
-                <Save size={14} /> Save
+                <Save size={14} /> <p className='text-sm font-semibold'> Save</p>
               </button>
             )}
 
             {/* Saved Label */}
             {savedStudents[s.id] && (
-              <span className="text-green-600 text-xs font-medium">
+              <span className="text-green-600 text-sm font-semibold">
                 Saved ✓
               </span>
             )}

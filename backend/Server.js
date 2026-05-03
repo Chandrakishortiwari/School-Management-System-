@@ -9,7 +9,9 @@ import TeacherRoute from './Src/routes/TeacherRoute.js';
 import ClassRoute from './Src/routes/ClassRoute.js';
 import AcademicYear from './Src/routes/AcademicYearRoute.js';
 import LeavesRoute from './Src/routes/LeavesRoute.js';
-import AttendanceRoute from './Src/routes/AttendanceRoute.js'
+import AttendanceRoute from './Src/routes/AttendanceRoute.js';
+import HostalplansRoute from './Src/routes/HostalPlansRouter.js';
+
 dotenv.config();
 Conect();
 const app = express()
@@ -35,6 +37,7 @@ app.use("/api/class", ClassRoute);
 app.use("/api/academicyear", AcademicYear);
 app.use("/api/leaves",LeavesRoute);
 app.use("/api/attendance",AttendanceRoute);
+app.use("/api/hostal", HostalplansRoute);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
